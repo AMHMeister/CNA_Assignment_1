@@ -5,6 +5,8 @@ import os
 import argparse
 import re
 
+from socket import *
+
 # 1MB buffer size
 BUFFER_SIZE = 1000000
 
@@ -20,6 +22,10 @@ proxyPort = int(args.port)
 try:
   # Create a server socket
   # ~~~~ INSERT CODE ~~~~
+
+  serverPort = 42000 #Hardcoded Port???
+  serverSocket = socket(AF_INET, SOCK_STREAM) #Internet and TCP 
+
   # ~~~~ END CODE INSERT ~~~~
   print ('Created socket')
 except:
@@ -29,6 +35,9 @@ except:
 try:
   # Bind the the server socket to a host and port
   # ~~~~ INSERT CODE ~~~~
+
+  serverSocket.bind(('',serverPort))
+
   # ~~~~ END CODE INSERT ~~~~
   print ('Port is bound')
 except:
@@ -38,6 +47,9 @@ except:
 try:
   # Listen on the server socket
   # ~~~~ INSERT CODE ~~~~
+
+  serverSocket.listen(1)
+
   # ~~~~ END CODE INSERT ~~~~
   print ('Listening to socket')
 except:
@@ -52,6 +64,9 @@ while True:
   # Accept connection from client and store in the clientSocket
   try:
     # ~~~~ INSERT CODE ~~~~
+
+    clientSocket, addr = serverSocket.accept()
+
     # ~~~~ END CODE INSERT ~~~~
     print ('Received a connection')
   except:
@@ -61,7 +76,11 @@ while True:
   # Get HTTP request from client
   # and store it in the variable: message_bytes
   # ~~~~ INSERT CODE ~~~~
+
+  message_bytes = clientSocket.recv(1024)
+  
   # ~~~~ END CODE INSERT ~~~~
+  
   message = message_bytes.decode('utf-8')
   print ('Received request:')
   print ('< ' + message)
