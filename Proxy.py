@@ -23,7 +23,7 @@ try:
   # Create a server socket
   # ~~~~ INSERT CODE ~~~~
 
-  serverPort = 42000 #Hardcoded Port???
+  serverPort = 8080 #Hardcoded Port???
   serverSocket = socket(AF_INET, SOCK_STREAM) #Internet and TCP 
 
   # ~~~~ END CODE INSERT ~~~~
@@ -48,7 +48,7 @@ try:
   # Listen on the server socket
   # ~~~~ INSERT CODE ~~~~
 
-  serverSocket.listen(1)
+  serverSocket.listen(5)
 
   # ~~~~ END CODE INSERT ~~~~
   print ('Listening to socket')
@@ -66,6 +66,7 @@ while True:
     # ~~~~ INSERT CODE ~~~~
 
     clientSocket, addr = serverSocket.accept()
+    print(f'Received a connection from {addr}')
 
     # ~~~~ END CODE INSERT ~~~~
     print ('Received a connection')
@@ -75,10 +76,16 @@ while True:
 
   # Get HTTP request from client
   # and store it in the variable: message_bytes
-  # ~~~~ INSERT CODE ~~~~
+  try:
+      message_bytes = clientSocket.recv(1024)
+      if not message_bytes:
+          raise ValueError("No data received from client.")
+      
+  except (socket.error, ValueError) as e:
+      print(f"Error receiving data from client: {e}")
+      clientSocket.close()
+      continue
 
-  message_bytes = clientSocket.recv(1024)
-  
   # ~~~~ END CODE INSERT ~~~~
   
   message = message_bytes.decode('utf-8')
@@ -132,6 +139,10 @@ while True:
     # ProxyServer finds a cache hit
     # Send back response to client 
     # ~~~~ INSERT CODE ~~~~
+
+    for line in cacheData:
+        clientSocket.sendall(line.encode())
+
     # ~~~~ END CODE INSERT ~~~~
     cacheFile.close()
     print ('Sent to the client:')
