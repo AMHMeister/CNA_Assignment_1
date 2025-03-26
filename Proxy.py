@@ -23,11 +23,11 @@ try:
   # Create a server socket
   # ~~~~ INSERT CODE ~~~~
 
-  serverPort = 8080 #Hardcoded Port???
+  serverPort = proxyPort
   serverSocket = socket(AF_INET, SOCK_STREAM) #Internet and TCP 
 
   # ~~~~ END CODE INSERT ~~~~
-  print ('Created socket')
+  print ('Created socket on Port ' + str(serverPort))
 except:
   print ('Failed to create socket')
   sys.exit()
@@ -48,7 +48,7 @@ try:
   # Listen on the server socket
   # ~~~~ INSERT CODE ~~~~
 
-  serverSocket.listen(5)
+  serverSocket.listen(5) #5 max connections
 
   # ~~~~ END CODE INSERT ~~~~
   print ('Listening to socket')
@@ -149,10 +149,13 @@ while True:
     print ('> ' + cacheData)
   except:
     # cache miss.  Get resource from origin server
-    originServerSocket = None
+    # originServerSocket = None
     # Create a socket to connect to origin server
     # and store in originServerSocket
     # ~~~~ INSERT CODE ~~~~
+
+    originServerSocket = socket(AF_INET, SOCK_STREAM) #TCP
+
     # ~~~~ END CODE INSERT ~~~~
 
     print ('Connecting to:\t\t' + hostname + '\n')
@@ -161,6 +164,9 @@ while True:
       address = socket.gethostbyname(hostname)
       # Connect to the origin server
       # ~~~~ INSERT CODE ~~~~
+
+      originServerSocket.connect((address, 80)) #port 80 for default http
+
       # ~~~~ END CODE INSERT ~~~~
       print ('Connected to origin Server')
 
