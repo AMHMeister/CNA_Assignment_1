@@ -213,7 +213,7 @@ while True:
       # ~~~~ INSERT CODE ~~~~
 
       clientSocket.sendall(FinalServerResponse)
-      print('Response sent to client')
+      
 
       # ~~~~ END CODE INSERT ~~~~
 
