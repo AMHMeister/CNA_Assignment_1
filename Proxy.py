@@ -142,6 +142,7 @@ while True:
 
     for line in cacheData:
         clientSocket.sendall(line.encode())
+        
 
     # ~~~~ END CODE INSERT ~~~~
     cacheFile.close()
@@ -199,14 +200,20 @@ while True:
       # Get the response from the origin server
       # ~~~~ INSERT CODE ~~~~
 
-      response = originServerSocket.recv(BUFFER_SIZE)
+      FinalServerResponse = b'' #byte string to store the response
+      while True:
+        response = originServerSocket.recv(BUFFER_SIZE)
+        if not response:
+          break
+        FinalServerResponse += response
 
       # ~~~~ END CODE INSERT ~~~~
 
       # Send the response to the client
       # ~~~~ INSERT CODE ~~~~
 
-      clientSocket.sendall(response)
+      clientSocket.sendall(FinalServerResponse)
+      print('Response sent to client')
 
       # ~~~~ END CODE INSERT ~~~~
 
@@ -220,7 +227,7 @@ while True:
       # Save origin server response in the cache file
       # ~~~~ INSERT CODE ~~~~
 
-      cacheFile.write(response)
+      cacheFile.write(FinalServerResponse)
     
       # ~~~~ END CODE INSERT ~~~~
       cacheFile.close()
@@ -239,3 +246,4 @@ while True:
     clientSocket.close()
   except:
     print ('Failed to close client socket')
+    
